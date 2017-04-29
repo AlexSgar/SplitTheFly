@@ -168,7 +168,7 @@ function generateNearbyFlies(clickedFly){
     switch(layoutMode){
         
         case 1: {
-            posDifference = (flyChildW/2);
+            posDifference = (flyChildW/2)
             firstFlyChildX = clickedFlyX;
             firstFlyChildY = clickedFlyY - posDifference;
             secondFlyChildX = clickedFlyX;
@@ -177,7 +177,7 @@ function generateNearbyFlies(clickedFly){
         }
         
         case 2: {
-            posDifference = (flyChildW/2);
+            posDifference = (flyChildW/2)
             firstFlyChildX = clickedFlyX + posDifference;
             firstFlyChildY = clickedFlyY;
             secondFlyChildX = clickedFlyX - posDifference;
