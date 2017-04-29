@@ -139,6 +139,10 @@ function generateNearbyFlies(clickedFly){
     clickedFlyW = parseInt(clickedFly.attr('width'))
 	clickedFlyH = parseInt(clickedFly.attr('height'))
     
+    var flyChildW,flyChildH,flyChildR;
+    flyChildW = clickedFlyW - flyChildDifference;
+	flyChildH = clickedFlyH - flyChildDifference;
+    
     //check if clickedFly is too small to generate childs
     if(flyChildW <=0 || flyChildH <=0){
 		return null
@@ -151,15 +155,11 @@ function generateNearbyFlies(clickedFly){
 	console.log('clickedFly x y',clickedFlyX,clickedFlyY)
 	console.log('clickedFly w h r',clickedFlyW,clickedFlyH,clickedFlyR)
     
-    var randomDistanceDifference = Math.ceil(Math.random()*10)
+    var randomDistanceDifference = Math.ceil(Math.random()*10);
+    var randomRotationDifference = Math.round(Math.random()*360);
     console.log('randomDistanceDifference',randomDistanceDifference);
-    
-    var randomRotationDifference = Math.round(Math.random()*360)
     console.log('randomRotationDifference',randomRotationDifference);
     
-    var flyChildW,flyChildH,flyChildR;
-    flyChildW = clickedFlyW - flyChildDifference;
-	flyChildH = clickedFlyH - flyChildDifference;
 	flyChildR = clickedFlyR - randomRotationDifference;
     
     var layoutMode = Math.ceil(Math.random()*4); //4 modes
@@ -169,7 +169,7 @@ function generateNearbyFlies(clickedFly){
     var maxXPosition = (innerWidth - flyChildW);
     var maxYPosition = (innerHeight - flyChildW);
     
-    console.log("layoutMode",layoutMode)
+    console.log("layoutMode",layoutMode);
     
     //choose between 4 layout mode
     switch(layoutMode){
