@@ -2,7 +2,7 @@ html{
     width: 100%;
     height: 100%;
     margin: 0px;
-    background-image: url(window_pane.jpg);
+    background-image: url(img/window_pane.jpg);
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

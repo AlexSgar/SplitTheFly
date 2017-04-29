@@ -54,7 +54,7 @@ function populateFlies(nOfFlies){
 	.data(flies)
 	.enter()
 	.append("svg:image")
-	.attr('xlink:href',"fly.svg")
+	.attr('xlink:href',"img/fly.svg")
 	.attr('width',function(fly){
 		return fly.w;
 	})
@@ -82,8 +82,11 @@ function populateFlies(nOfFlies){
 
 populateFlies(nOfFlies);
 
-//flies = [{x:350,y:460,rotation:90,width:defaultFlyWidth,height:defaultFlyHeight}]
-
+/*flies = [{x:10,y:200,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2},
+        {x:300,y:10,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2},
+        {x:650,y:200,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2},
+        {x:300,y:930,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2}]
+*/
 
 function onClickFly(clickedFly){
 
@@ -111,7 +114,7 @@ function newChild(flyChildOptions){
     
     svgContainer
 		.append("svg:image")
-		.attr('xlink:href',"fly.svg")
+		.attr('xlink:href',"img/fly.svg")
 		.attr('width',flyChildOptions.w)
 		.attr('height',flyChildOptions.h)
 		.attr('posX',flyChildOptions.x)
@@ -133,15 +136,20 @@ function generateNearbyFlies(clickedFly){
     }
     
     var clickedFlyX,clickedFlyY,clickedFlyW,clickedFlyH;
+    clickedFlyW = parseInt(clickedFly.attr('width'))
+	clickedFlyH = parseInt(clickedFly.attr('height'))
+    
+    //check if clickedFly is too small to generate childs
+    if(flyChildW <=0 || flyChildH <=0){
+		return null
+    }
+    
 	clickedFlyX = parseInt(clickedFly.attr('posX'))
 	clickedFlyY = parseInt(clickedFly.attr('posY'))
-	clickedFlyW = parseInt(clickedFly.attr('width'))
-	clickedFlyH = parseInt(clickedFly.attr('height'))
 	clickedFlyR = parseInt(clickedFly.attr('rotation'))
+    
 	console.log('clickedFly x y',clickedFlyX,clickedFlyY)
 	console.log('clickedFly w h r',clickedFlyW,clickedFlyH,clickedFlyR)
-    
-    var flyChildW,flyChildH,flyChildR;
     
     var randomDistanceDifference = Math.ceil(Math.random()*10)
     console.log('randomDistanceDifference',randomDistanceDifference);
@@ -149,57 +157,155 @@ function generateNearbyFlies(clickedFly){
     var randomRotationDifference = Math.round(Math.random()*360)
     console.log('randomRotationDifference',randomRotationDifference);
     
+    var flyChildW,flyChildH,flyChildR;
     flyChildW = clickedFlyW - flyChildDifference;
 	flyChildH = clickedFlyH - flyChildDifference;
 	flyChildR = clickedFlyR - randomRotationDifference;
     
-    //check if clickedFly is too small to generate childs
-    if(flyChildW <=0 || flyChildH <=0){
-		return null
-    }
-
     var layoutMode = Math.ceil(Math.random()*4); //4 modes
     var firstFlyChildX,firstFlyChildY;
     var secondFlyChildX,secondFlyChildY;
-    var posDifference;
+    var posDifference,offset;
+    var maxXPosition = (innerWidth - flyChildW);
+    var maxYPosition = (innerHeight - flyChildW);
     
     console.log("layoutMode",layoutMode)
     
+    //choose between 4 layout mode
     switch(layoutMode){
         
         case 1: {
+            /*
+                    | 
+                firstChild
+                secondChild
+                    | 
+                
+            */
             posDifference = (flyChildW/2);
             firstFlyChildX = clickedFlyX;
             firstFlyChildY = clickedFlyY - posDifference;
             secondFlyChildX = clickedFlyX;
             secondFlyChildY = clickedFlyY + posDifference;
+            
+            //case upward fly is out of screen
+            if(firstFlyChildY <0){
+                offset = (-firstFlyChildY) // is negative value
+                firstFlyChildY = 0;
+                secondFlyChildY = secondFlyChildY + offset;//move down
+            }
+            
+            //case downward fly is out of screen
+            else if(secondFlyChildY >= maxYPosition){
+                offset = (secondFlyChildY - maxYPosition);
+                secondFlyChildY = maxYPosition;
+                firstFlyChildY = firstFlyChildY - offset; 
+                
+            }
+            
             break;
         }
         
         case 2: {
+            /*  --  secondChild          firstFlyChild   -- 
+            */
             posDifference = (flyChildW/2);
             firstFlyChildX = clickedFlyX + posDifference;
             firstFlyChildY = clickedFlyY;
             secondFlyChildX = clickedFlyX - posDifference;
             secondFlyChildY = clickedFlyY;
+            
+            //case right fly is out of screen
+            if(firstFlyChildX >= maxXPosition){
+                offset = firstFlyChildX - maxXPosition;
+                firstFlyChildX = maxXPosition;
+                secondFlyChildX = secondFlyChildX - offset;
+            }
+            
+            else if(secondFlyChildX <0){
+                offset = (-secondFlyChildX)
+                secondFlyChildX = 0;
+                firstFlyChildX = firstFlyChildX + offset;
+            }
+            
             break;
         }
             
         case 3: {
+            /*           | firstFlyChild
+                |  secondFlyChild  
+            */
             posDifference = (flyChildH/2) + randomDistanceDifference
             firstFlyChildX = clickedFlyX + posDifference;
             firstFlyChildY = clickedFlyY - posDifference;
             secondFlyChildX = clickedFlyX - posDifference;
             secondFlyChildY = clickedFlyY + posDifference;
+            
+            //check if position is out of screen
+            if(firstFlyChildX >= maxXPosition){
+                offset = firstFlyChildX - maxXPosition;
+                firstFlyChildX = maxXPosition;
+                secondFlyChildX = secondFlyChildX - offset;
+            }
+            
+            if(secondFlyChildX <0){
+                offset = (-secondFlyChildX)
+                secondFlyChildX = 0;
+                firstFlyChildX = firstFlyChildX + offset;
+            }
+            
+            if(firstFlyChildY <0){
+                offset = (-firstFlyChildY) // is negative value
+                firstFlyChildY = 0;
+                secondFlyChildY = secondFlyChildY + offset;//move down
+            }
+            
+            if(secondFlyChildY >= maxYPosition){
+                offset = (secondFlyChildY - maxYPosition);
+                secondFlyChildY = maxYPosition;
+                firstFlyChildY = firstFlyChildY - offset; //move up
+                
+            }
+            
             break;
         }
         
         case 4: {
+            /*  | firstFlyChild
+                            |  secondFlyChild
+            */
             posDifference = (flyChildH/2) + randomDistanceDifference
             firstFlyChildX = clickedFlyX - posDifference;
             firstFlyChildY = clickedFlyY - posDifference;
             secondFlyChildX = clickedFlyX + posDifference;
             secondFlyChildY = clickedFlyY + posDifference;
+            
+            //check if position is out of screen
+            if(firstFlyChildX >= maxXPosition){
+                offset = firstFlyChildX - maxXPosition;
+                firstFlyChildX = maxXPosition;
+                secondFlyChildX = secondFlyChildX - offset;
+            }
+            
+            if(secondFlyChildX <0){
+                offset = (-secondFlyChildX)
+                secondFlyChildX = 0;
+                firstFlyChildX = firstFlyChildX + offset;
+            }
+            
+            if(firstFlyChildY <0){
+                offset = (-firstFlyChildY) // is negative value
+                firstFlyChildY = 0;
+                secondFlyChildY = secondFlyChildY + offset;//move down
+            }
+            
+            if(secondFlyChildY >= maxYPosition){
+                offset = (secondFlyChildY - maxYPosition);
+                secondFlyChildY = maxYPosition;
+                firstFlyChildY = firstFlyChildY - offset; //move up
+                
+            }
+            
             break;
         }
     }
