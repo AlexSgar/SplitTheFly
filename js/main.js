@@ -9,8 +9,8 @@ var defaultFlyHeight = 20;
 var flyChildDifference = 10;
 
 var svgContainer = d3.select('body')
-					.append('svg')
-					.attr('width','100%')
+                    .append('svg')
+                    .attr('width','100%')
 					.attr('height','100%')
 
 
@@ -82,17 +82,13 @@ function populateFlies(nOfFlies){
 
 populateFlies(nOfFlies);
 
-/*flies = [{x:10,y:200,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2},
-        {x:300,y:10,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2},
-        {x:650,y:200,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2},
-        {x:300,y:930,r:90,w:defaultFlyWidth * 2,h:defaultFlyHeight*2}]
-*/
-
+//click on fly behaviour
 function onClickFly(clickedFly){
 
 	splitFly(clickedFly);
 }
 
+//slpit current fly
 function splitFly(clickedFly){
     
 	var newRandomLayoutForFlyChilds = generateNearbyFlies(clickedFly);
@@ -110,6 +106,7 @@ function splitFly(clickedFly){
     }
 }
 
+//create new child
 function newChild(flyChildOptions){
     
     svgContainer
@@ -129,6 +126,7 @@ function newChild(flyChildOptions){
 		})
 }
 
+//function that generate and return nearby flies options
 function generateNearbyFlies(clickedFly){
 	
     if(!clickedFly){
@@ -162,7 +160,7 @@ function generateNearbyFlies(clickedFly){
     
 	flyChildR = clickedFlyR - randomRotationDifference;
     
-    var layoutMode = Math.ceil(Math.random()*4); //4 modes
+    var layoutMode = Math.ceil(Math.random()*4); //4 layout modes
     var firstFlyChildX,firstFlyChildY;
     var secondFlyChildX,secondFlyChildY;
     var posDifference,offset;
@@ -194,7 +192,6 @@ function generateNearbyFlies(clickedFly){
                 firstFlyChildY = 0;
                 secondFlyChildY = secondFlyChildY + offset;//move down
             }
-            
             //case downward fly is out of screen
             else if(secondFlyChildY >= maxYPosition){
                 offset = (secondFlyChildY - maxYPosition);
@@ -221,7 +218,7 @@ function generateNearbyFlies(clickedFly){
                 firstFlyChildX = maxXPosition;
                 secondFlyChildX = secondFlyChildX - offset;
             }
-            
+            //case left fly is out of screen
             else if(secondFlyChildX <0){
                 offset = (-secondFlyChildX)
                 secondFlyChildX = 0;
@@ -241,25 +238,22 @@ function generateNearbyFlies(clickedFly){
             secondFlyChildX = clickedFlyX - posDifference;
             secondFlyChildY = clickedFlyY + posDifference;
             
-            //check if position is out of screen
+            //check if position of fly childs is out of screen
             if(firstFlyChildX >= maxXPosition){
                 offset = firstFlyChildX - maxXPosition;
                 firstFlyChildX = maxXPosition;
                 secondFlyChildX = secondFlyChildX - offset;
             }
-            
             if(secondFlyChildX <0){
                 offset = (-secondFlyChildX)
                 secondFlyChildX = 0;
                 firstFlyChildX = firstFlyChildX + offset;
             }
-            
             if(firstFlyChildY <0){
                 offset = (-firstFlyChildY) // is negative value
                 firstFlyChildY = 0;
                 secondFlyChildY = secondFlyChildY + offset;//move down
             }
-            
             if(secondFlyChildY >= maxYPosition){
                 offset = (secondFlyChildY - maxYPosition);
                 secondFlyChildY = maxYPosition;
@@ -280,7 +274,7 @@ function generateNearbyFlies(clickedFly){
             secondFlyChildX = clickedFlyX + posDifference;
             secondFlyChildY = clickedFlyY + posDifference;
             
-            //check if position is out of screen
+            //check if position of fly childs is out of screen
             if(firstFlyChildX >= maxXPosition){
                 offset = firstFlyChildX - maxXPosition;
                 firstFlyChildX = maxXPosition;
@@ -309,7 +303,6 @@ function generateNearbyFlies(clickedFly){
             break;
         }
     }
-    
     
     console.log('firstFlyChild x y',firstFlyChildX,firstFlyChildY)
 	console.log('secondFlyChild x y',secondFlyChildX,secondFlyChildY)
